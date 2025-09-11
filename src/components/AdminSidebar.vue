@@ -1,192 +1,273 @@
 <template>
-  <div class="flex min-h-screen bg-gray-100">
-    <!-- Sidebar -->
-    <div :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" 
-         class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
-      
-      <!-- Sidebar Header -->
-      <div class="flex items-center justify-between h-16 px-6 bg-blue-600 text-white">
-        <div class="flex items-center space-x-3">
-          <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-            </svg>
-          </div>
-          <div>
-            <h1 class="text-lg font-bold">MediCare</h1>
-            <p class="text-xs text-blue-200">Admin Panel</p>
-          </div>
+<div class="relative">
+
+    <div v-if="isMobile && isOpen" @click="closeSidebar" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"></div>
+
+    <div :class="[
+        'fixed top-0 left-0 h-full bg-[#5E936C] shadow-2xl z-50 transition-all duration-300 ease-in-out transform',
+        isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
+        isCollapsed && !isMobile ? 'w-20' : 'w-72'
+      ]">
+
+        <div class="flex items-center justify-between p-6 border-b border-white/10">
+            <div v-if="!isCollapsed || isMobile" class="flex items-center space-x-3">
+                <div class="flex items-center justify-center">
+                    <img src="@/assets/logo.png" alt="Icon" class="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 xl:w-20 xl:h-20 object-contain" />
+                </div>
+
+                <div class="text-white">
+                    <h2 class="font-bold text-lg lg:text-xl">E-Laporan</h2>
+                    <p class="text-sm lg:text-base opacity-75">RSPAD Gatot Soebroto</p>
+                </div>
+            </div>
+            <button @click="toggleCollapse" class="hidden lg:flex w-8 h-8 bg-white/10 hover:bg-white/20 rounded-lg items-center justify-center transition-colors duration-200">
+                <svg :class="['w-4 h-4 text-white transition-transform duration-300', isCollapsed ? 'rotate-180' : '']" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+
+            <button @click="closeSidebar" class="lg:hidden w-8 h-8 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors duration-200">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
-        <button @click="toggleSidebar" class="lg:hidden text-white hover:text-blue-200">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-      </div>
+        <nav class="flex-1 py-6 px-3 overflow-y-auto">
+            <ul class="space-y-2">
 
-      <!-- Navigation Menu -->
-      <nav class="mt-8 px-4">
-        <div class="space-y-2">
-          <!-- Dashboard -->
-          <a href="#" @click="setActiveMenu('dashboard')" 
-             :class="activeMenu === 'dashboard' ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'"
-             class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200">
-            <svg class="mr-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5h8m-8 0V3a2 2 0 012-2h4a2 2 0 012 2v2m-8 0v4m8-4v4"/>
-            </svg>
-            Dashboard
-          </a>
+                <li>
+                    <router-link to="/optimasi-awal/" class="flex items-center space-x-3 px-3 py-3 text-white transition-all duration-200 group" :class="{ 'bg-[#3E5F44] shadow-lg': $route.path === '/optimasi-awal' }">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                            </svg>
+                        </div>
+                        <span v-if="!isCollapsed || isMobile" class="font-medium group-hover:translate-x-1 transition-transform duration-200">
+                            Optimasi Awal
+                        </span>
+                        <div v-if="(!isCollapsed || isMobile)" class="ml-auto w-2 h-2 bg-[#93DA97] rounded-full animate-pulse"></div>
+                    </router-link>
+                </li>
 
-          <!-- Patients -->
-          <a href="#" @click="setActiveMenu('patients')" 
-             :class="activeMenu === 'patients' ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'"
-             class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200">
-            <svg class="mr-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-            </svg>
-            Patients
-            <span class="ml-auto bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full">{{ patientCount }}</span>
-          </a>
+                <li>
+                    <router-link to="/filtering-data/" class="flex items-center space-x-3 px-3 py-3 text-white transition-all duration-200 group" :class="{ 'bg-[#3E5F44] shadow-lg': $route.path === '/filtering-data' }">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />
+                            </svg>
+                        </div>
+                        <span v-if="!isCollapsed || isMobile" class="font-medium group-hover:translate-x-1 transition-transform duration-200">
+                            Filtering Data
+                        </span>
+                    </router-link>
+                </li>
 
-          <!-- Doctors -->
-          <a href="#" @click="setActiveMenu('doctors')" 
-             :class="activeMenu === 'doctors' ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'"
-             class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200">
-            <svg class="mr-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-            </svg>
-            Doctors
-            <span class="ml-auto bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full">{{ doctorCount }}</span>
-          </a>
+                <li class="pt-4">
+                    <div v-if="!isCollapsed || isMobile" class="px-3 pb-2">
+                        <p class="text-xs font-semibold text-white/60 uppercase tracking-wider">Laporan</p>
+                    </div>
+                    <div v-else class="px-3 pb-2">
+                        <div class="w-full h-px bg-white/20"></div>
+                    </div>
+                </li>
 
-          <!-- Appointments -->
-          <a href="#" @click="setActiveMenu('appointments')" 
-             :class="activeMenu === 'appointments' ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'"
-             class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200">
-            <svg class="mr-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 0v1a2 2 0 002 2h4a2 2 0 002-2V7m-6 0h6M7 21h10a2 2 0 002-2V9a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-            </svg>
-            Appointments
-            <span class="ml-auto bg-yellow-100 text-yellow-600 text-xs px-2 py-1 rounded-full">{{ appointmentCount }}</span>
-          </a>
+                <li>
+                    <router-link to="/laporan-bulanan/" class="flex items-center space-x-3 px-3 py-3 text-white transition-all duration-200 group" :class="{ 'bg-[#3E5F44] shadow-lg': $route.path === '/laporan-bulanan' }">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" />
+                            </svg>
+                        </div>
+                        <span v-if="!isCollapsed || isMobile" class="font-medium group-hover:translate-x-1 transition-transform duration-200">
+                            Laporan Bulanan
+                        </span>
+                    </router-link>
+                </li>
 
-          <!-- Departments -->
-          <a href="#" @click="setActiveMenu('departments')" 
-             :class="activeMenu === 'departments' ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'"
-             class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200">
-            <svg class="mr-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h4a1 1 0 011 1v5m-6 0h6"/>
-            </svg>
-            Departments
-          </a>
+                <li>
+                    <router-link to="/laporan-operasi/" class="flex items-center space-x-3 px-3 py-3 text-white transition-all duration-200 group" :class="{ 'bg-[#3E5F44] shadow-lg': $route.path === '/laporan-operasi' }">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 8h-2v3h-3v2h3v3h2v-3h3v-2h-3zM4 6h5v2h2V6h2V4h-2V1h-2v3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h7.17l-.59-.59L12 21H4V8h5V6z" />
+                            </svg>
+                        </div>
+                        <span v-if="!isCollapsed || isMobile" class="font-medium group-hover:translate-x-1 transition-transform duration-200">
+                            Laporan Operasi
+                        </span>
+                    </router-link>
+                </li>
 
-          <!-- Reports -->
-          <a href="#" @click="setActiveMenu('reports')" 
-             :class="activeMenu === 'reports' ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'"
-             class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200">
-            <svg class="mr-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-            </svg>
-            Reports
-          </a>
+                <li>
+                    <router-link to="/laporan-rawat-jalan/" class="flex items-center space-x-3 px-3 py-3 text-white transition-all duration-200 group" :class="{ 'bg-[#3E5F44] shadow-lg': $route.path === '/laporan-rawat-jalan' }">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                            </svg>
+                        </div>
+                        <span v-if="!isCollapsed || isMobile" class="font-medium group-hover:translate-x-1 transition-transform duration-200">
+                            Laporan Rawat Jalan
+                        </span>
+                    </router-link>
+                </li>
 
-          <!-- Settings -->
-          <a href="#" @click="setActiveMenu('settings')" 
-             :class="activeMenu === 'settings' ? 'bg-blue-50 text-blue-600 border-r-2 border-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'"
-             class="group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200">
-            <svg class="mr-3 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            Settings
-          </a>
+                <li>
+                    <router-link to="/laporan-rawat-inap/" class="flex items-center space-x-3 px-3 py-3 text-white transition-all duration-200 group" :class="{ 'bg-[#3E5F44] shadow-lg': $route.path === '/laporan-rawat-inap' }">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                            </svg>
+                        </div>
+                        <span v-if="!isCollapsed || isMobile" class="font-medium group-hover:translate-x-1 transition-transform duration-200">
+                            Laporan Rawat Inap
+                        </span>
+                    </router-link>
+                </li>
+
+                <li>
+                    <router-link to="/laporan-igd/" class="flex items-center space-x-3 px-3 py-3 text-white transition-all duration-200 group" :class="{ 'bg-[#3E5F44] shadow-lg': $route.path === '/laporan-igd' }">
+                        <div class="w-6 h-6 flex items-center justify-center">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zm0 13.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z" />
+                            </svg>
+                        </div>
+                        <span v-if="!isCollapsed || isMobile" class="font-medium group-hover:translate-x-1 transition-transform duration-200">
+                            Laporan IGD
+                        </span>
+                    </router-link>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="border-t border-white/10 p-6">
+            <div v-if="!isCollapsed || isMobile" class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-[#93DA97] rounded-full flex items-center justify-center">
+                    <span class="text-[#3E5F44] font-semibold text-sm">AD</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-white font-medium text-sm truncate">Admin User</p>
+                    <p class="text-white/60 text-xs truncate">admin@rspad.com</p>
+                </div>
+                <button @click="handleLogout" class="w-8 h-8 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors duration-200">
+                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </button>
+
+            </div>
+            <div v-else class="flex justify-center">
+                <div class="w-10 h-10 bg-[#93DA97] rounded-full flex items-center justify-center">
+                    <span class="text-[#3E5F44] font-semibold text-sm">AD</span>
+                </div>
+            </div>
         </div>
-      </nav>
-
-      <!-- User Profile Section -->
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-            <span class="text-white font-semibold text-sm">{{ userInitials }}</span>
-          </div>
-          <div class="flex-1 min-w-0">
-            <p class="text-sm font-medium text-gray-900 truncate">{{ userName }}</p>
-            <p class="text-xs text-gray-500">Administrator</p>
-          </div>
-          <button @click="logout" class="text-gray-400 hover:text-gray-600">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-            </svg>
-          </button>
-        </div>
-      </div>
     </div>
-
-    <!-- Mobile Sidebar Overlay -->
-    <div v-if="sidebarOpen" @click="closeSidebar" 
-         class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"></div>
-
-
-  </div>
+</div>
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import Swal from 'sweetalert2'
 
 export default {
-  name: "AdminSidebar",
-  setup() {
-    const sidebarOpen = ref(false)
-    const activeMenu = ref('dashboard')
-    const userName = ref('Dr. Admin')
-    const patientCount = ref(1245)
-    const doctorCount = ref(85)
-    const appointmentCount = ref(23)
+    name: 'SidebarAdmin',
+    props: {
+        isOpen: {
+            type: Boolean,
+            default: true
+        }
+    },
+    data() {
+        return {
+            isCollapsed: false,
+            isMobile: false
+        }
+    },
+    mounted() {
+        this.checkMobile()
+        window.addEventListener('resize', this.checkMobile)
+    },
+    beforeUnmount() {
+        window.removeEventListener('resize', this.checkMobile)
+    },
+    methods: {
+        toggleCollapse() {
+            if (!this.isMobile) {
+                this.isCollapsed = !this.isCollapsed
+                this.$emit('toggle-collapse', this.isCollapsed)
+            }
+        },
+        closeSidebar() {
+            this.$emit('close-sidebar')
+        },
+        checkMobile() {
+            this.isMobile = window.innerWidth < 1024
+            if (this.isMobile) {
+                this.isCollapsed = false
+            }
+        },
+        async handleLogout() {
+            const result = await Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar dari sistem?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    popup: 'rounded-2xl',
+                    confirmButton: 'rounded-xl px-6 py-2',
+                    cancelButton: 'rounded-xl px-6 py-2'
+                }
+            })
 
-    const userInitials = computed(() => {
-      return userName.value
-        .split(' ')
-        .map(name => name.charAt(0))
-        .join('')
-        .toUpperCase()
-    })
+            if (result.isConfirmed) {
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Logout',
+                    text: 'Anda telah keluar dari sistem.',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    customClass: {
+                        popup: 'rounded-2xl'
+                    }
+                })
 
-    const toggleSidebar = () => {
-      sidebarOpen.value = !sidebarOpen.value
+                // 🚀 Redirect ke halaman login
+                this.$router.push('/login')
+            }
+        }
     }
-
-    const closeSidebar = () => {
-      sidebarOpen.value = false
-    }
-
-    const setActiveMenu = (menu) => {
-      activeMenu.value = menu
-      if (window.innerWidth < 1024) {
-        sidebarOpen.value = false
-      }
-    }
-
-    const logout = () => {
-      if (confirm('Are you sure you want to logout?')) {
-        // Handle logout logic here
-        alert('Logged out successfully!')
-      }
-    }
-
-    return {
-      sidebarOpen,
-      activeMenu,
-      userName,
-      userInitials,
-      patientCount,
-      doctorCount,
-      appointmentCount,
-      toggleSidebar,
-      closeSidebar,
-      setActiveMenu,
-      logout
-    }
-  }
 }
 </script>
+
+<style>
+/* Custom scrollbar for sidebar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Router link active styles */
+.router-link-active {
+    @apply bg-[#3E5F44] shadow-lg;
+}
+
+/* Animation for menu items */
+.group:hover .group-hover\:translate-x-1 {
+    transform: translateX(0.25rem);
+}
+</style>

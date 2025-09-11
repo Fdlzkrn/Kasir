@@ -6,14 +6,13 @@
         <div class="absolute bottom-20 left-1/4 w-20 h-20 bg-teal-300 rounded-full blur-md"></div>
         <div class="absolute bottom-10 right-10 w-16 h-16 bg-white rounded-full blur-lg"></div>
     </div>
-    <div class="relative z-10 flex flex-col lg:flex-row min-h-screen">     
-        <div class="flex-1 flex flex-col justify-center items-center text-white px-6 sm:px-8 lg:px-12 py-8 lg:py-12">      
+    <div class="relative z-10 flex flex-col lg:flex-row min-h-screen">
+        <div class="flex-1 flex flex-col justify-center items-center text-white px-6 sm:px-8 lg:px-12 py-8 lg:py-12">
             <div class="mb-8 lg:mb-12 transform hover:scale-105 transition-transform duration-300">
                 <div class="relative flex items-center justify-center">
-                    <img src="@/assets/logo.png" alt="Kesehatan" class="w-36 sm:w-40 lg:w-48" />
+                    <img src="@/assets/logo.png" alt="Logo" class="w-36 sm:w-40 lg:w-48" />
                 </div>
             </div>
-
             <div class="text-center max-w-lg">
                 <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 lg:mb-6 leading-tight">
                     Selamat Datang di <span class="">E-Laporan</span>
@@ -26,14 +25,13 @@
         </div>
         <div class="bg-[#3E5F44] w-full lg:w-96 xl:w-[700px] flex flex-col justify-center px-6 sm:px-8 lg:px-10 py-8 lg:py-12">
             <div class=" backdrop-blur-sm p-6 sm:p-8 lg:p-10">
-                
+
                 <div class="mb-6 lg:mb-8 text-center lg:text-left">
                     <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-2">
                         Masuk ke Akun Anda
                     </h2>
                 </div>
                 <form @submit.prevent="handleLogin" class="space-y-5 lg:space-y-6">
-                    
                     <div class="space-y-2">
                         <label for="email" class="block text-white text-sm font-semibold">
                             Email
@@ -48,7 +46,6 @@
                         </div>
                     </div>
 
-                    
                     <div class="space-y-2">
                         <label for="password" class="block text-white text-sm font-semibold">
                             Password
@@ -71,14 +68,12 @@
                             </button>
                         </div>
                     </div>
-                    
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
                         <a href="#" @click.prevent="handleForgotPassword" class="text-white hover:text-emerald-400 text-sm font-medium transition-colors duration-200">
                             Lupa Password?
                         </a>
                     </div>
 
-                    
                     <button type="submit" :disabled="isLoading" class="w-full bg-[#93DA97] hover:from-emerald-600 hover:to-green-700 text-white font-semibold py-3 lg:py-4 px-6 rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm lg:text-base">
                         <span v-if="!isLoading" class="flex items-center">
                             LOGIN
@@ -92,8 +87,6 @@
                         </div>
                     </button>
                 </form>
-
-                
                 <div class="mt-6 lg:mt-8 text-center">
                     <p class="text-xs lg:text-sm text-white">
                         Dengan masuk, Anda menyetujui
@@ -162,8 +155,11 @@ export default {
             try {
                 await new Promise(resolve => setTimeout(resolve, 1500));
 
-                const isSuccess = Math.random() > 0.2;
-                if (isSuccess) {
+                // ✅ Dummy akun
+                const dummyEmail = "akunadmin@gmail.com";
+                const dummyPassword = "12345678";
+
+                if (this.form.email === dummyEmail && this.form.password === dummyPassword) {
                     await Swal.fire({
                         icon: 'success',
                         title: 'Login Berhasil!',
@@ -180,7 +176,9 @@ export default {
                         this.form.email = '';
                         this.form.password = '';
                     }
-                    this.$router.push('/dashboard');
+
+                    // 🚀 Redirect
+                    this.$router.push('/optimasi-awal');
                     console.log('Redirecting to dashboard...', {
                         email: this.form.email,
                         rememberMe: this.form.rememberMe
@@ -199,7 +197,6 @@ export default {
                         }
                     });
                 }
-
             } catch (error) {
                 Swal.fire({
                     icon: 'error',
@@ -215,6 +212,7 @@ export default {
             } finally {
                 this.isLoading = false;
             }
+
         },
 
         handleForgotPassword() {
