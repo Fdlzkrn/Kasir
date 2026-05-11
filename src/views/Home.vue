@@ -41,7 +41,7 @@
         <div class="grid grid-cols-3 gap-3 mt-5">
 
           <div class="bg-slate-50 rounded-2xl p-3 text-center">
-            <p class="text-lg font-bold text-indigo-600">53</p>
+            <p class="text-lg font-bold text-indigo-600">51</p>
             <p class="text-[11px] text-slate-500">Transaksi</p>
           </div>
 
